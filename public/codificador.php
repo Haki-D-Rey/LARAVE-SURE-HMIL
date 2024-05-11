@@ -2,6 +2,7 @@
     /* Llama a este archivo 'hello-world.php' */
     require __DIR__ . '/vendor/autoload.php';
 
+    use Mike42\Escpos\EscposImage;
     use Mike42\Escpos\PrintConnectors\FilePrintConnector;
     use Mike42\Escpos\Printer;
 
@@ -106,6 +107,12 @@
         $printer = new Printer($connector);
         // Datos de la impresión
 
+        $logo = EscposImage::load('./logo.png',false);
+
+        // Imprimir la imagen en el centro
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->bitImage($logo, false);
+
         // Datos de la factura
         $nombreTienda = "Hospital Militar Escuela\nDr. Alejandro Davila Bolaños";
         $direccionTienda = "I Congreso Internacional de Enfermería";
@@ -115,6 +122,7 @@
         // Imprimir encabezado
         $printer->setJustification(Printer::JUSTIFY_CENTER);
         $printer->text("$nombreTienda\n");
+        $printer->feed(1);
         $printer->text("$direccionTienda\n");
         $printer->text("$telefonoTienda\n\n");
         // Imprimir detalles de la factura
@@ -143,7 +151,7 @@
         // Generar el contenido del voucher
         $voucherContent = "
 ===============================
-    VOUCHER DE EVENTO
+   VOUCHER DE EVENTO
 ===============================
 
 ";
@@ -163,7 +171,7 @@
         $printer->text($voucherContent);
 
         $printer->text("\n--------------------------------\n");
-        $printer->feed(5);
+        $printer->feed(2);
         $printer->cut();
         $printer->close();
 
