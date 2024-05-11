@@ -1,0 +1,12 @@
+{
+    "autoload" : {
+		"psr-4" : {
+			"Mike42\\" : "src/Mike42"
+		}
+	},    
+    "require": {
+        "mike42/escpos-php": "^4.0",
+        "setasign/fpdi-fpdf": "^2.3",
+        "spatie/pdf-to-image": "^1.2"
+    }
+}
