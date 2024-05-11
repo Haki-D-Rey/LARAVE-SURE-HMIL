@@ -76,10 +76,8 @@
     $query =
         "SELECT
             tb.id_participante AS `N°`, 
-            SUBSTRING_INDEX(tb.nombre, ' ', 1) AS PrimerNombre,
-            SUBSTRING_INDEX(tb.nombre, ' ', -1) AS SegundoNombre,
-            SUBSTRING_INDEX(tb.apellidos, ' ', 1) AS PrimerApellido,
-            SUBSTRING_INDEX(tb.apellidos, ' ', -1) AS SegundoApellido,
+            tb.nombre AS Nombres,
+            tb.apellidos AS Apellidos,
             titulo,
             'GRUPO A' AS grupo, 
             CONCAT('https://eventosinternacionales.hospitalmilitar.com.ni/?showModel=1&codigo=', 'PC-ECIE-',LPAD(tb.id_participante, 4, '0')) AS url_qrcode, 
@@ -109,17 +107,10 @@
         // Datos de la impresión
 
         // Datos de la factura
-        $nombreTienda = "Mi Tienda";
-        $direccionTienda = "123 Calle Principal";
-        $telefonoTienda = "555-123-456";
+        $nombreTienda = "Hospital Militar Escuela\nDr. Alejandro Davila Bolaños";
+        $direccionTienda = "Evento - I Congreso Internacional de Enfermería";
+        $telefonoTienda = "Centro de Convenciones Olof Palme";
         $fecha = date("Y-m-d H:i:s");
-        $nombreCliente = "Cliente: Juan Pérez";
-        $items = [
-            ["Producto 1", 10.00, 2], // Nombre, Precio unitario, Cantidad
-            ["Producto 2", 15.00, 1],
-            ["Producto 3", 20.00, 3]
-        ];
-        $total = 0;
 
         // Imprimir encabezado
         $printer->setJustification(Printer::JUSTIFY_CENTER);
@@ -127,22 +118,32 @@
         $printer->text("$direccionTienda\n");
         $printer->text("$telefonoTienda\n\n");
 
+        $nombreCompleto = $rows[0]['Nombres'] . ' ' .  $rows[0]['Apellidos'];
+        $tipoParticipante = $rows[0]['TipoParticipacion'];
+        $titulo = $rows[0]['titulo'];
 
         // Imprimir detalles de la factura
         $printer->setJustification(Printer::JUSTIFY_LEFT);
         $printer->text("Fecha: $fecha\n");
-        $printer->text("$nombreCliente\n");
         $printer->text("--------------------------------\n");
-        foreach ($items as $item) {
-            $producto = $item[0];
-            $precio = $item[1];
-            $cantidad = $item[2];
-            $subtotal = $precio * $cantidad;
-            $total += $subtotal;
-            $printer->text(str_pad($producto, 20) . str_pad($precio, 10) . str_pad($cantidad, 10) . $subtotal . "\n");
-        }
+
+        // Generar el contenido del voucher
+        $voucherContent = "
+===============================
+        VOUCHER DE EVENTO
+===============================
+
+Nombre Completo: $nombreCompleto
+Tipo de Participante: $tipoParticipante
+Título: $titulo
+
+===============================
+";
+
+        // Imprimir el contenido del voucher
+        $printer->text($voucherContent);
+
         $printer->text("--------------------------------\n");
-        $printer->text("TOTAL:" . str_pad($total, 50));
         $printer->feed(5);
         $printer->cut();
         $printer->close();
