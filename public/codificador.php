@@ -108,7 +108,7 @@
 
         // Datos de la factura
         $nombreTienda = "Hospital Militar Escuela\nDr. Alejandro Davila Bolaños";
-        $direccionTienda = "Evento - I Congreso Internacional de Enfermería";
+        $direccionTienda = "I Congreso Internacional de Enfermería";
         $telefonoTienda = "Centro de Convenciones Olof Palme";
         $fecha = date("Y-m-d H:i:s");
 
@@ -117,33 +117,52 @@
         $printer->text("$nombreTienda\n");
         $printer->text("$direccionTienda\n");
         $printer->text("$telefonoTienda\n\n");
+        // Imprimir detalles de la factura
+        // $printer->setJustification(Printer::JUSTIFY_LEFT);
+        $printer->text("Fecha: $fecha\n");
+        $printer->text("--------------------------------\n");
 
         $nombreCompleto = $rows[0]['Nombres'] . ' ' .  $rows[0]['Apellidos'];
         $tipoParticipante = $rows[0]['TipoParticipacion'];
         $titulo = $rows[0]['titulo'];
 
-        // Imprimir detalles de la factura
-        $printer->setJustification(Printer::JUSTIFY_LEFT);
-        $printer->text("Fecha: $fecha\n");
-        $printer->text("--------------------------------\n");
+
+        // // Generar el contenido del voucher
+        // $voucherContent = "
+        // ===============================
+        //         VOUCHER DE EVENTO
+        // ===============================
+
+        // $nombreCompleto
+        // $tipoParticipante
+        // $titulo
+
+        // ===============================
+        // ";
 
         // Generar el contenido del voucher
         $voucherContent = "
 ===============================
-        VOUCHER DE EVENTO
+    VOUCHER DE EVENTO
 ===============================
 
-Nombre Completo: $nombreCompleto
-Tipo de Participante: $tipoParticipante
-Título: $titulo
+";
+        // Center aligning each line individually
+        $voucherContent .= str_pad($nombreCompleto, 30, " ", STR_PAD_BOTH) . "\n";
+        $voucherContent .= str_pad($tipoParticipante, 30, " ", STR_PAD_BOTH) . "\n";
+        $voucherContent .= str_pad($titulo, 30, " ", STR_PAD_BOTH) . "\n";
 
+        $voucherContent .= "
 ===============================
 ";
+
+        // Trim any leading/trailing whitespace
+        $voucherContent = trim($voucherContent);
 
         // Imprimir el contenido del voucher
         $printer->text($voucherContent);
 
-        $printer->text("--------------------------------\n");
+        $printer->text("\n--------------------------------\n");
         $printer->feed(5);
         $printer->cut();
         $printer->close();

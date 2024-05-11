@@ -179,7 +179,7 @@
                     console.log(data);
                     urlInput.value = "";
                     let datosInscritos = data.data[0];
-                    alert(`El usuario ${datosInscritos.PrimerNombre + " " + datosInscritos.SegundoNombre + " " + datosInscritos.PrimerApellido + " " + datosInscritos.SegundoApellido } ${!data.EsInscrito ? "Esta inscrito": "No esta inscrito"}`);
+                    alert(`El usuario ${datosInscritos.Nombres + " "  + datosInscritos.Apellidos } ${!data.EsInscrito ? "Esta inscrito": "No esta inscrito"}`);
                 })
                 .catch(error => {
                     console.error('Error:', error);
